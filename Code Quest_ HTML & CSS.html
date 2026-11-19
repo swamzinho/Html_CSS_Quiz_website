@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Code Quest: HTML &amp; CSS</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f4fb;--ink:#14213d;--card:#fff;--line:#c9d0e6;--hi:#ffd23f;--ok:#12805c;--okbg:#d9f5e8;--bad:#c62f2f;--badbg:#fde0e0;--code:#14213d;--codefg:#e8ecff;--box-padding-top:env(safe-area-inset-top,0px);--box-padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1630;--ink:#eef1ff;--card:#17234a;--line:#34447a;--ok:#5be3a8;--okbg:#12403a;--bad:#ff8c8c;--badbg:#4a2230;--code:#0a1128}}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+h1,h2{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.1;margin:0 0 .4em}
+h1{font-size:clamp(2.4rem,9vw,4rem);font-weight:800}
+h1 mark{background:var(--hi);color:#14213d;padding:0 .15em}
+h2{font-size:1.5rem}
+.card{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+button,input{font:inherit;color:inherit}
+.btn{background:var(--hi);color:#14213d;border:2px solid #14213d;border-radius:10px;padding:.6em 1.2em;font-weight:700;cursor:pointer;box-shadow:3px 3px 0 #14213d}
+.btn:active{transform:translate(3px,3px);box-shadow:none}
+.btn:focus-visible,.opt:focus-visible,input:focus-visible{outline:3px solid #3b6cff;outline-offset:2px}
+input[type=text]{width:100%;padding:.6em .8em;border:2px solid var(--line);border-radius:10px;background:var(--card)}
+.bar{display:flex;gap:12px;align-items:center;font-weight:700;flex-wrap:wrap}
+.track{flex:1 1 120px;height:12px;background:var(--line);border-radius:6px;overflow:hidden}
+.fill{height:100%;background:var(--hi);width:0;transition:width .3s}
+.tag{font-size:.85rem;font-weight:700;padding:.1em .6em;border-radius:99px;border:2px solid var(--line)}
+pre{background:var(--code);color:var(--codefg);padding:14px;border-radius:10px;overflow-x:auto;font:15px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:12px 0}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:10px;padding:.65em .9em;margin:8px 0;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.no{background:var(--badbg);border-color:var(--bad)}
+.fb{margin-top:14px;padding:12px 14px;border-radius:10px;font-weight:500}
+.fb.ok{background:var(--okbg)}.fb.no{background:var(--badbg)}
+.hidden{display:none}
+.big{font-family:"Bricolage Grotesque",sans-serif;font-size:3.5rem;font-weight:800;line-height:1}
+code.c{background:var(--line);padding:.05em .35em;border-radius:5px;font-size:.92em}
+.row{display:flex;gap:10px}.row input{flex:1}
+.miss{margin:6px 0;padding-left:1em;border-left:4px solid var(--bad)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<section id="start">
+  <h1>Code <mark>Quest</mark></h1>
+  <p>25 questions on HTML and CSS. Pick answers or type the missing code. Streaks earn bonus points.</p>
+  <div class="card">
+    <label for="nm"><b>Your name</b></label>
+    <input type="text" id="nm" maxlength="30" placeholder="Type your name" autocomplete="off">
+    <p style="margin-bottom:0"><button class="btn" id="go">Start the quest</button></p>
+  </div>
+  <div class="card"><b>Levels</b><br>1. HTML basics (6) &middot; 2. CSS basics (6) &middot; 3. Selectors &amp; hover tricks (5) &middot; 4. Layout &amp; position (8)</div>
+</section>
+
+<section id="quiz" class="hidden">
+  <div class="bar"><span id="lv" class="tag"></span><span id="qn"></span><div class="track"><div class="fill" id="pf"></div></div><span id="sc"></span></div>
+  <div class="card">
+    <h2 id="q"></h2>
+    <pre id="code" class="hidden"></pre>
+    <div id="ans"></div>
+    <div id="fb" class="fb hidden" role="status"></div>
+    <p style="margin-bottom:0"><button class="btn hidden" id="next">Next</button></p>
+  </div>
+</section>
+
+<section id="end" class="hidden">
+  <h1>Quest <mark>complete</mark></h1>
+  <div class="card">
+    <div class="big" id="fs"></div>
+    <p id="fm"></p>
+    <p>Correct: <b id="fc"></b> of 25 &middot; Best streak: <b id="fst"></b></p>
+    <p>Share this with your teacher:</p>
+    <pre id="rc"></pre>
+    <button class="btn" id="cp">Copy result</button> <button class="btn" id="again">Play again</button>
+  </div>
+  <div id="rev"></div>
+</section>
+</main>
+
+<script>
+var Q=[
+// Level 1: HTML basics
+{l:1,t:"mc",q:"Which tag makes the biggest heading?",o:["<h1>","<h6>","<head>","<title>"],a:0,w:"<h1> is the top-level heading. <h6> is the smallest."},
+{l:1,t:"fill",q:"Fill in the tag name that makes a paragraph.",c:"<___>Hello</___>",a:["p"],w:"The <p> tag wraps a paragraph of text."},
+{l:1,t:"mc",q:"Which tag shows a picture, like your basketball.png?",o:["<img>","<picture-link>","<src>","<photo>"],a:0,w:"<img src=\"...\" alt=\"...\"> displays an image."},
+{l:1,t:"fill",q:"Which attribute holds the web address of a link?",c:"<a ___=\"https://www.google.com\">Google</a>",a:["href"],w:"href means hypertext reference: where the link goes."},
+{l:1,t:"mc",q:"Which tag turns each item into a bullet-list row?",o:["<li> inside <ul>","<p> inside <div>","<td> inside <ol>","<b> inside <i>"],a:0,w:"<ul> is the list, <li> is each list item (like your “this is #1” items)."},
+{l:1,t:"mc",q:"Where does the <link rel=\"stylesheet\"> tag belong?",o:["Inside <head>","Inside <p>","After </html>","Inside <h1>"],a:0,w:"Your css1.html puts it in <head> so styles load before the page shows."},
+// Level 2: CSS basics
+{l:2,t:"mc",q:"Which one is an EXTERNAL stylesheet?",o:["<link rel=\"stylesheet\" href=\"style.css\">","<p style=\"color:red\">","<style>p{color:red}</style>","color: red;"],a:0,w:"Inline = style attribute, Internal = <style> tag, External = a separate .css file linked in."},
+{l:2,t:"fill",q:"Write the CSS selector for the element with id=\"p4\".",c:"___ { color: FireBrick; }",a:["#p4"],w:"# selects an id. A dot (.) selects a class."},
+{l:2,t:"mc",q:"Which selector targets every element with class=\"even\"?",o:[".even","#even","even#","*even"],a:0,w:".even targets classes. Both p1 and p3 in css1.html would match."},
+{l:2,t:"fill",q:"Which @font-face property points to the font file?",c:"@font-face {\n  font-family: \"Tuffy\";\n  ___: url(fonts/Tuffy-Italic.ttf);\n}",a:["src"],w:"src (source) tells the browser where to load the font from."},
+{l:2,t:"mc",q:"What does background-size: cover do to the owl picture?",o:["Scales it to fill the whole area, cropping if needed","Shrinks it to its smallest size","Repeats it as tiles","Makes it invisible"],a:0,w:"cover fills the whole space without stretching, so the edges may be cropped."},
+{l:2,t:"mc",q:"Bug hunt! In position.css, margin-right:50 px; does not work. Why?",o:["There is a space between 50 and px","margin-right does not exist","50 must be in quotes","px must be uppercase"],a:0,w:"Units must touch the number: 50px, never 50 px."},
+// Level 3: selectors and hover
+{l:3,t:"mc",q:"#container + p { } styles which elements?",o:["Only the first <p> right after #container","Every <p> inside #container","All <p> on the page","Every <p> after #container"],a:0,w:"+ is the adjacent sibling combinator: only the very next sibling. (~ would match all later siblings.)"},
+{l:3,t:"mc",q:"What does div p { } select?",o:["Every <p> inside a <div>, at any depth","Only <p> that are direct children","Only the first <p>","Every <div> and every <p>"],a:0,w:"A space means descendant. > means direct child only."},
+{l:3,t:"fill",q:"Which symbol selects ALL later siblings (general siblings)?",c:"h2 ___ p { color: teal; }",a:["~"],w:"~ is the general sibling combinator."},
+{l:3,t:"fill",q:"Which pseudo-class styles a button WHILE it is being pressed?",c:"button:___ { background: green; }",a:["active",":active"],w:":active applies while the mouse button is held down. :hover applies on mouseover."},
+{l:3,t:"mc",q:"li:nth-child(4n) { } colors which of your 9 list items?",o:["#4 and #8","Only #4","#1, #5 and #9","#4, #8 and #12"],a:0,w:"4n means every 4th item: 4, 8, 12... but you only have 9 items."},
+// Level 4: layout
+{l:4,t:"mc",q:"What is the difference between display:none and visibility:hidden?",o:["none removes the space; hidden keeps an empty gap","They are identical","hidden removes the space; none keeps a gap","none only works on <span>"],a:0,w:"display:none takes the element out of the layout. visibility:hidden hides it but keeps its space."},
+{l:4,t:"fill",q:"Which display value sits in a line like text but accepts width and height?",c:"span { display: ___; width: 100px; }",a:["inline-block"],w:"inline-block = flows inline, but respects width and height (like your green span)."},
+{l:4,t:"mc",q:"Two boxes have width:50%, padding:25px and a border. What makes them fit side by side?",o:["box-sizing: border-box","box-sizing: content-box","display: none","margin: 0 auto"],a:0,w:"border-box counts padding and border inside the 50%, so two boxes equal exactly 100%."},
+{l:4,t:"fill",q:"Which property lets text wrap around an image box?",c:"#box1 { ___: left; }",a:["float"],w:"float pushes an element left or right while text flows around it."},
+{l:4,t:"mc",q:"Margin vs padding: which is correct?",o:["Margin is space outside the border; padding is space inside it","Margin is inside the border; padding is outside","Both are inside the border","Both are outside the border"],a:0,w:"Padding pushes content away from the border. Margin pushes other elements away."},
+{l:4,t:"fill",q:"Which overflow value adds scrollbars only when the content is too big?",c:"div { height: 75px; overflow: ___; }",a:["auto"],w:"auto shows scrollbars only when needed. scroll always shows them."},
+{l:4,t:"mc",q:"position: fixed; on #box1 means the box...",o:["Stays in the same spot on screen while you scroll","Moves with its parent only","Is invisible","Goes behind all text"],a:0,w:"Fixed elements are anchored to the browser window, which is why #box1 stays put in position.html."},
+{l:4,t:"mc",q:"position: absolute; is placed relative to...",o:["The nearest ancestor that has a position other than static","Always the top of the page","The previous sibling","The browser window only"],a:0,w:"If no ancestor is positioned, it falls back to the page. That is why the nested absolute boxes matter."}
+];
+var LN=["","HTML basics","CSS basics","Selectors & hover","Layout & position"];
+var i=0,score=0,streak=0,best=0,right=0,miss=[],name="",done=false;
+var $=function(id){return document.getElementById(id)};
+function show(id){["start","quiz","end"].forEach(function(s){$(s).classList.toggle("hidden",s!==id)});window.scrollTo(0,0)}
+function shuffle(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[j];a[j]=t}return a}
+function norm(s){return s.toLowerCase().replace(/\s+/g,"").replace(/;$/,"")}
+function load(){
+  var q=Q[i];done=false;
+  $("lv").textContent="Level "+q.l+": "+LN[q.l];
+  $("qn").textContent="Q"+(i+1)+"/25";
+  $("pf").style.width=(i/25*100)+"%";
+  $("sc").textContent=score+" pts"+(streak>1?" · streak "+streak:"");
+  $("q").textContent=q.q;
+  var c=$("code");c.classList.toggle("hidden",!q.c);c.textContent=q.c||"";
+  $("fb").className="fb hidden";$("next").classList.add("hidden");
+  var A=$("ans");A.innerHTML="";
+  if(q.t==="mc"){
+    var correct=q.o[q.a];
+    shuffle(q.o).forEach(function(t){
+      var b=document.createElement("button");b.className="opt";b.textContent=t;
+      b.onclick=function(){finish(t===correct,b,correct)};A.appendChild(b)});
+  }else{
+    A.innerHTML='<div class="row"><input type="text" id="fi" placeholder="Type your answer" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Your answer"><button class="btn" id="ck">Check</button></div>';
+    var f=$("fi");f.focus();
+    var go=function(){if(!f.value.trim())return;var ok=q.a.some(function(x){return norm(x)===norm(f.value)});finish(ok,null,q.a[0])};
+    $("ck").onclick=go;f.onkeydown=function(e){if(e.key==="Enter")go()};
+  }
+}
+function finish(ok,btn,correct){
+  if(done)return;done=true;var q=Q[i];
+  var fb=$("fb");
+  if(ok){right++;streak++;best=Math.max(best,streak);var pts=10+Math.min(streak-1,5)*2;score+=pts;fb.className="fb ok";fb.textContent="Correct! +"+pts+" points. "+q.w}
+  else{streak=0;miss.push({n:i+1,q:q.q,a:correct});fb.className="fb no";fb.textContent="Not quite. Answer: "+correct+". "+q.w}
+  var opts=document.querySelectorAll(".opt");
+  opts.forEach(function(o){o.disabled=true;if(o.textContent===correct)o.classList.add("ok");else if(o===btn)o.classList.add("no")});
+  if(q.t==="fill"){$("fi").disabled=true;$("ck").disabled=true}
+  $("sc").textContent=score+" pts";
+  var n=$("next");n.textContent=i===24?"See results":"Next";n.classList.remove("hidden");n.focus();
+}
+function end(){
+  show("end");
+  var pct=Math.round(right/25*100);
+  $("fs").textContent=score+" pts";
+  $("fm").textContent=pct>=90?"Master coder! You really know your HTML and CSS.":pct>=70?"Great work! A little review and you are there.":pct>=50?"Good start. Check the missed questions below and try again.":"Keep practicing. Replay and watch your score climb!";
+  $("fc").textContent=right;$("fst").textContent=best;
+  $("rc").textContent="Code Quest: "+name+"\nScore: "+score+" pts\nCorrect: "+right+"/25 ("+pct+"%)\nBest streak: "+best;
+  var r=$("rev");r.innerHTML="";
+  if(miss.length){var h=document.createElement("h2");h.textContent="Review these";r.appendChild(h);
+    miss.forEach(function(m){var d=document.createElement("div");d.className="miss";d.textContent="Q"+m.n+": "+m.q+" → "+m.a;r.appendChild(d)})}
+}
+$("go").onclick=function(){name=$("nm").value.trim()||"Student";i=0;score=0;streak=0;best=0;right=0;miss=[];show("quiz");load()};
+$("nm").onkeydown=function(e){if(e.key==="Enter")$("go").click()};
+$("next").onclick=function(){i++;if(i>=25)end();else load()};
+$("again").onclick=function(){show("start")};
+$("cp").onclick=function(){var t=$("rc").textContent;try{navigator.clipboard.writeText(t).then(function(){$("cp").textContent="Copied!"})}catch(e){var r=document.createRange();r.selectNode($("rc"));getSelection().removeAllRanges();getSelection().addRange(r);$("cp").textContent="Select and copy"}};
+</script>
+</body>
+</html>
